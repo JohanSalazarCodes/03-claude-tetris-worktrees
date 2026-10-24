@@ -290,7 +290,9 @@ kbd {
   color: var(--controls-text);
 }
 
-.level-select select {
+.level-select input {
+  width: 56px;
+  text-align: center;
   background: var(--kbd-bg);
   color: var(--text);
   border: 1px solid var(--kbd-border);

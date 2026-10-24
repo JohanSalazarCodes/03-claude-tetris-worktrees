@@ -28,6 +28,7 @@ const PIECES = [
   [[8,8,8],[8,0,8],[8,8,8]],                  // N (tuerca)
 ];
 
+const MAX_START_LEVEL = 10;
 const LINE_SCORES = [0, 100, 300, 500, 800];
 
 const canvas = document.getElementById('board');
@@ -299,7 +300,9 @@ function init() {
 
 document.addEventListener('keydown', e => {
   if (e.code === 'KeyP' || e.code === 'Escape') {
-    if (!e.repeat) togglePause();
+    if (e.target !== startLevelSel || e.code === 'Escape') {
+      if (!e.repeat) togglePause();
+    }
     return;
   }
   if (paused || gameOver) return;
@@ -331,8 +334,14 @@ document.getElementById('pause-restart-btn').addEventListener('click', init);
 document.getElementById('controls-btn').addEventListener('click', () => showOverlayView('controls'));
 document.getElementById('controls-back-btn').addEventListener('click', () => showOverlayView('pause'));
 
-for (let i = 1; i <= 10; i++) startLevelSel.add(new Option(i, i));
-startLevelSel.addEventListener('change', () => { startLevel = +startLevelSel.value; });
+// Solo dígitos; al salir del campo se acota a 1–MAX_START_LEVEL (vacío = 1).
+startLevelSel.addEventListener('input', () => {
+  startLevelSel.value = startLevelSel.value.replace(/\D/g, '');
+});
+startLevelSel.addEventListener('change', () => {
+  startLevel = Math.min(MAX_START_LEVEL, Math.max(1, parseInt(startLevelSel.value, 10) || 1));
+  startLevelSel.value = startLevel;
+});
 
 const themeToggle = document.getElementById('theme-toggle');
 const toggleIcon = themeToggle.querySelector('.toggle-icon');
