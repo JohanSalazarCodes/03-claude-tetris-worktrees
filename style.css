@@ -236,9 +236,6 @@ kbd {
 }
 
 .skin-select {
-  position: absolute;
-  top: 0;
-  left: 0;
   background: var(--toggle-bg);
   border: 1px solid var(--toggle-border);
   border-radius: 20px;
