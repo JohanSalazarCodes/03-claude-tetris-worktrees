@@ -316,3 +316,21 @@ kbd {
 }
 
 #name-form button:hover { background: #9bbdff; }
+
+.skin-select {
+  background: var(--toggle-bg);
+  border: 1px solid var(--toggle-border);
+  border-radius: 20px;
+  padding: 4px 8px;
+  font: 13px 'Courier New', Courier, monospace;
+  color: var(--toggle-text);
+}
+
+body.skin-neon {
+  --bg: #000;
+  --canvas-bg: #000;
+  --grid-line: #14142a;
+  --border: #00f0ff;
+}
+body.skin-pastel { --canvas-bg: #fdf6ff; --grid-line: #eadcf0; }
+body.skin-pixel { --canvas-bg: #1d1d1d; --grid-line: #2c2c2c; }
