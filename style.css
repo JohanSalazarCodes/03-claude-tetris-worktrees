@@ -38,6 +38,19 @@ body.light-mode {
   --toggle-text: #3a3a6a;
 }
 
+body[data-skin="neon"] { --canvas-bg: #000; --grid-line: #14142a; }
+body[data-skin="pastel"] { --canvas-bg: #fdf6ff; --grid-line: #eadff0; }
+
+.skin-select {
+  background: var(--toggle-bg);
+  border: 1px solid var(--toggle-border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font: 13px 'Courier New', Courier, monospace;
+  color: var(--toggle-text);
+  cursor: pointer;
+}
+
 body {
   background: var(--bg);
   color: var(--text);
