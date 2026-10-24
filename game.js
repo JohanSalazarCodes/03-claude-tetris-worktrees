@@ -171,15 +171,54 @@ function updateHUD() {
   levelEl.textContent = level;
 }
 
+const NEON = [null, '#00ffff', '#ffff00', '#ff00ff', '#00ff66', '#ff3355', '#3377ff', '#ff9900', '#cccccc'];
+const PASTEL = [null, '#b5ead7', '#fff5ba', '#e0bbe4', '#c7f0bd', '#ffb7b2', '#c4dff6', '#ffdac1', '#d9d9d9'];
+
+// Cada skin dibuja un bloque en (px,py) de lado s
+const SKINS = {
+  retro(c, px, py, s, color) {
+    c.fillStyle = color;
+    c.fillRect(px + 1, py + 1, s - 2, s - 2);
+    c.fillStyle = 'rgba(255,255,255,0.12)';
+    c.fillRect(px + 1, py + 1, s - 2, 4);
+  },
+  neon(c, px, py, s, color) {
+    c.shadowColor = color;
+    c.shadowBlur = 12;
+    c.strokeStyle = color;
+    c.lineWidth = 2;
+    c.strokeRect(px + 3, py + 3, s - 6, s - 6);
+    c.fillStyle = color + '55';
+    c.fillRect(px + 3, py + 3, s - 6, s - 6);
+    c.shadowBlur = 0;
+  },
+  pastel(c, px, py, s, color) {
+    c.fillStyle = color;
+    c.beginPath();
+    c.roundRect(px + 2, py + 2, s - 4, s - 4, s / 3);
+    c.fill();
+  },
+  pixel(c, px, py, s, color) {
+    c.fillStyle = color;
+    c.fillRect(px, py, s, s);
+    const u = s / 6; // textura: luz arriba/izq, sombra abajo/der, punto central
+    c.fillStyle = 'rgba(255,255,255,0.35)';
+    c.fillRect(px, py, s, u);
+    c.fillRect(px, py, u, s);
+    c.fillStyle = 'rgba(0,0,0,0.35)';
+    c.fillRect(px, py + s - u, s, u);
+    c.fillRect(px + s - u, py, u, s);
+    c.fillRect(px + 2 * u, py + 2 * u, 2 * u, 2 * u);
+  },
+};
+const SKIN_PALETTES = { neon: NEON, pastel: PASTEL };
+let skin = 'retro';
+
 function drawBlock(context, x, y, colorIndex, size, alpha) {
   if (!colorIndex) return;
-  const color = COLORS[colorIndex];
+  const color = (SKIN_PALETTES[skin] || COLORS)[colorIndex];
   context.globalAlpha = alpha ?? 1;
-  context.fillStyle = color;
-  context.fillRect(x * size + 1, y * size + 1, size - 2, size - 2);
-  // highlight
-  context.fillStyle = 'rgba(255,255,255,0.12)';
-  context.fillRect(x * size + 1, y * size + 1, size - 2, 4);
+  SKINS[skin](context, x * size, y * size, size, color);
   context.globalAlpha = 1;
 }
 
@@ -420,4 +459,20 @@ themeToggle.addEventListener('click', () => {
   localStorage.setItem('tetris-theme', isLight ? 'light' : 'dark');
 });
 
+const skinSelect = document.getElementById('skin-select');
+
+function applySkin(name) {
+  skin = SKINS[name] ? name : 'retro';
+  document.body.dataset.skin = skin;
+  skinSelect.value = skin;
+  if (next) { drawNext(); if (!gameOver) draw(); }
+}
+
+skinSelect.addEventListener('change', () => {
+  applySkin(skinSelect.value);
+  localStorage.setItem('tetris-skin', skin);
+  skinSelect.blur(); // evita que las flechas cambien el select durante el juego
+});
+
+applySkin(localStorage.getItem('tetris-skin'));
 showOverlay('TETRIS', '');
