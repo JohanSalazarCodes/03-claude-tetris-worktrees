@@ -217,6 +217,14 @@ kbd {
   color: #7aa2f7;
 }
 
+.overlay-box button { width: 180px; }
+.overlay-box.game-over .pause-only { display: none; }
+#controls-list { list-style: none; font-size: 13px; line-height: 1.8; }
+#controls-list[hidden] { display: none; }
+.overlay-box label { font-size: 13px; color: var(--label); display: flex; gap: 8px; align-items: center; }
+
+#resume-btn,
+#controls-btn,
 #restart-btn {
   margin-top: 8px;
   background: #7aa2f7;
@@ -231,6 +239,8 @@ kbd {
   transition: background 0.15s;
 }
 
+#resume-btn:hover,
+#controls-btn:hover,
 #restart-btn:hover {
   background: #9bbdff;
 }
