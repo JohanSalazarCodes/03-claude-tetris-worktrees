@@ -234,3 +234,66 @@ kbd {
 #restart-btn:hover {
   background: #9bbdff;
 }
+
+#records-list {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  width: 220px;
+  padding-left: 24px;
+  text-align: left;
+}
+
+#records-list li {
+  padding: 2px 4px;
+}
+
+#records-list li span {
+  float: right;
+}
+
+#records-list li.me {
+  background: #7aa2f7;
+  color: #0f0f17;
+  font-weight: 700;
+}
+
+#records-extra {
+  font-size: 12px;
+  color: var(--label);
+}
+
+#new-record {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+
+#new-record[hidden] {
+  display: none;
+}
+
+#new-record p {
+  width: 100%;
+  color: #ffd54f;
+  font-weight: 700;
+}
+
+#name-input {
+  width: 130px;
+  padding: 6px;
+  user-select: text;
+}
+
+#save-btn, #reset-btn {
+  cursor: pointer;
+  padding: 6px 10px;
+}
+
+#reset-btn {
+  background: none;
+  border: none;
+  color: var(--label);
+  font-size: 11px;
+  text-decoration: underline;
+}
