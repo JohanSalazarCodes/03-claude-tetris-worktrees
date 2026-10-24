@@ -14,6 +14,15 @@
     </button>
     <h1 class="game-title">TETRIS</h1>
     <div class="game-container">
+      <aside class="panel records-panel">
+        <div class="panel-section">
+          <span class="label">TOP 3</span>
+          <ol class="records-list podium"></ol>
+          <p class="records-extra"></p>
+          <button class="reset-records">&#8635; Resetear</button>
+        </div>
+      </aside>
+
       <canvas id="board" width="300" height="600"></canvas>
 
       <aside class="panel">
@@ -52,6 +61,12 @@
       <div class="overlay-box">
         <p id="overlay-title">GAME OVER</p>
         <p id="overlay-score"></p>
+        <form id="name-form" class="hidden">
+          <input id="name-input" maxlength="12" placeholder="Tu nombre" required />
+          <button type="submit">Guardar</button>
+        </form>
+        <ol class="records-list"></ol>
+        <p class="records-extra"></p>
         <button id="restart-btn">Reiniciar</button>
       </div>
     </div>

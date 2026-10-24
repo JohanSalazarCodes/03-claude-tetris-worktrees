@@ -234,3 +234,85 @@ kbd {
 #restart-btn:hover {
   background: #9bbdff;
 }
+
+/* ---- Records ---- */
+.records-panel { width: 170px; }
+
+.records-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.records-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--controls-text);
+  transition: color 0.25s;
+}
+
+.records-list b {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  color: #7aa2f7;
+  letter-spacing: 1px;
+}
+
+.records-list .me,
+.records-list .me b { color: #ffd54f; }
+
+.records-extra {
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--controls-text);
+  transition: color 0.25s;
+}
+
+.reset-records {
+  align-self: flex-start;
+  background: var(--toggle-bg);
+  border: 1px solid var(--toggle-border);
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--toggle-text);
+  cursor: pointer;
+  transition: background 0.25s, color 0.25s, border-color 0.25s;
+}
+
+.reset-records:hover { color: #e57373; border-color: #e57373; }
+
+#name-form { display: flex; gap: 6px; }
+#name-form.hidden { display: none; }
+
+#name-input {
+  width: 120px;
+  background: var(--canvas-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  color: var(--text);
+}
+
+#name-form button {
+  background: #7aa2f7;
+  color: #0f0f17;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+#name-form button:hover { background: #9bbdff; }
