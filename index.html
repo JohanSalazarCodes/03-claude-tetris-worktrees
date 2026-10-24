@@ -53,7 +53,6 @@
         <p id="overlay-title">GAME OVER</p>
         <p id="overlay-score"></p>
         <button id="resume-btn" class="pause-only">Reanudar</button>
-        <button id="restart-btn">Reiniciar</button>
         <button id="controls-btn" class="pause-only">Ver controles</button>
         <ul id="controls-list" class="pause-only" hidden>
           <li><kbd>←</kbd><kbd>→</kbd> mover</li>
@@ -68,6 +67,15 @@
             <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
           </select>
         </label>
+        <div id="new-record" hidden>
+          <p>¡Entras al top 5!</p>
+          <input id="name-input" maxlength="10" placeholder="Tu nombre" autocomplete="off" />
+          <button id="save-btn">Guardar</button>
+        </div>
+        <ol id="records-list"></ol>
+        <p id="records-extra"></p>
+        <button id="restart-btn">Jugar</button>
+        <button id="reset-btn">Resetear records</button>
       </div>
     </div>
   </div>
