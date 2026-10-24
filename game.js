@@ -28,6 +28,7 @@ const PIECES = [
   [[8,8,8],[8,0,8],[8,8,8]],                  // N (tuerca)
 ];
 
+const MAX_START_LEVEL = 10;
 const LINE_SCORES = [0, 100, 300, 500, 800];
 
 const canvas = document.getElementById('board');
@@ -43,7 +44,11 @@ const overlayScore = document.getElementById('overlay-score');
 const nameForm = document.getElementById('name-form');
 const nameInput = document.getElementById('name-input');
 const restartBtn = document.getElementById('restart-btn');
+const pauseMenu = document.getElementById('pause-menu');
+const controlsView = document.getElementById('controls-view');
+const startLevelSel = document.getElementById('start-level');
 
+let startLevel = 1;
 let board, current, next, score, lines, level, paused, gameOver, lastTime, dropAccum, dropInterval, animId, combo, bestCombo, highlight;
 
 function createBoard() {
@@ -110,8 +115,8 @@ function clearLines() {
   if (cleared) {
     lines += cleared;
     score += (LINE_SCORES[cleared] || 0) * level;
-    level = Math.floor(lines / 10) + 1;
-    dropInterval = Math.max(100, 1000 - (level - 1) * 90);
+    level = startLevel + Math.floor(lines / 10);
+    dropInterval = levelInterval(level);
     updateHUD();
   }
   return cleared;
@@ -147,6 +152,10 @@ function renderRecords() {
 function qualifies() {
   const { top } = loadRecords();
   return score > 0 && (top.length < TOP_N || score > top[top.length - 1].score);
+}
+
+function levelInterval(lvl) {
+  return Math.max(100, 1000 - (lvl - 1) * 90);
 }
 
 function ghostY() {
@@ -322,6 +331,7 @@ function endGame() {
   nameForm.classList.toggle('hidden', !qualifies());
   if (qualifies()) nameInput.focus();
   renderRecords();
+  showOverlayView('gameover');
   overlay.classList.remove('hidden');
 }
 
@@ -344,10 +354,20 @@ document.querySelector('.reset-records').addEventListener('click', () => {
   renderRecords();
 });
 
+function showOverlayView(view) {
+  restartBtn.classList.toggle('hidden', view !== 'gameover');
+  pauseMenu.classList.toggle('hidden', view !== 'pause');
+  controlsView.classList.toggle('hidden', view !== 'controls');
+  if (view === 'controls') overlayTitle.textContent = 'CONTROLES';
+  else if (view === 'pause') overlayTitle.textContent = 'PAUSA';
+}
+
 function togglePause() {
   if (gameOver) return;
   paused = !paused;
   if (!paused) {
+    overlay.classList.add('hidden');
+    document.activeElement.blur(); // evita que Space "pulse" el botón enfocado
     lastTime = performance.now();
     loop(lastTime);
   } else {
@@ -355,6 +375,7 @@ function togglePause() {
     overlayTitle.textContent = 'PAUSA';
     overlayScore.textContent = '';
     nameForm.classList.add('hidden');
+    showOverlayView('pause');
     overlay.classList.remove('hidden');
   }
 }
@@ -380,13 +401,13 @@ function init() {
   board = createBoard();
   score = 0;
   lines = 0;
-  level = 1;
+  level = startLevel;
   combo = bestCombo = 0;
   highlight = -1;
   nameInput.value = '';
   paused = false;
   gameOver = false;
-  dropInterval = 1000;
+  dropInterval = levelInterval(level);
   dropAccum = 0;
   lastTime = performance.now();
   next = randomPiece();
@@ -400,7 +421,12 @@ function init() {
 
 document.addEventListener('keydown', e => {
   if (e.target === nameInput) return;
-  if (e.code === 'KeyP') { togglePause(); return; }
+  if (e.code === 'KeyP' || e.code === 'Escape') {
+    if (e.target !== startLevelSel || e.code === 'Escape') {
+      if (!e.repeat) togglePause();
+    }
+    return;
+  }
   if (paused || gameOver) return;
   switch (e.code) {
     case 'ArrowLeft':
@@ -425,6 +451,19 @@ document.addEventListener('keydown', e => {
 });
 
 restartBtn.addEventListener('click', init);
+document.getElementById('resume-btn').addEventListener('click', togglePause);
+document.getElementById('pause-restart-btn').addEventListener('click', init);
+document.getElementById('controls-btn').addEventListener('click', () => showOverlayView('controls'));
+document.getElementById('controls-back-btn').addEventListener('click', () => showOverlayView('pause'));
+
+// Solo dígitos; al salir del campo se acota a 1–MAX_START_LEVEL (vacío = 1).
+startLevelSel.addEventListener('input', () => {
+  startLevelSel.value = startLevelSel.value.replace(/\D/g, '');
+});
+startLevelSel.addEventListener('change', () => {
+  startLevel = Math.min(MAX_START_LEVEL, Math.max(1, parseInt(startLevelSel.value, 10) || 1));
+  startLevelSel.value = startLevel;
+});
 
 const themeToggle = document.getElementById('theme-toggle');
 const toggleIcon = themeToggle.querySelector('.toggle-icon');
