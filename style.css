@@ -234,3 +234,66 @@ kbd {
 #restart-btn:hover {
   background: #9bbdff;
 }
+
+/* ---- Menú de pausa ---- */
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.menu.hidden, #restart-btn.hidden {
+  display: none;
+}
+
+.menu button, #restart-btn {
+  min-width: 180px;
+}
+
+.menu button {
+  background: var(--toggle-bg);
+  color: var(--text);
+  border: 1px solid var(--toggle-border);
+  border-radius: 6px;
+  padding: 10px 28px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+
+.menu button:hover, .menu button:focus-visible {
+  border-color: #7aa2f7;
+  color: #7aa2f7;
+}
+
+.menu ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.menu li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.level-select {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--controls-text);
+}
+
+.level-select select {
+  background: var(--kbd-bg);
+  color: var(--text);
+  border: 1px solid var(--kbd-border);
+  border-radius: 4px;
+  padding: 4px 8px;
+}
