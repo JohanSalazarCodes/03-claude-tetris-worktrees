@@ -235,10 +235,23 @@ kbd {
   background: #9bbdff;
 }
 
-.records-list { margin: 4px 0; padding-left: 1.4em; font-size: 12px; text-align: left; }
-.records-list b { float: right; margin-left: 12px; }
+.records-list { margin: 4px 0; padding: 0; list-style: none; font-size: 12px; text-align: left; }
+.records-list li { display: flex; justify-content: space-between; gap: 8px; padding: 2px 0; }
 .records-list .me { color: #ffd54f; font-weight: bold; }
-.records-extra { font-size: 11px; margin: 4px 0; }
-.reset-records { font-size: 10px; cursor: pointer; }
+.records-extra { font-size: 11px; margin: 4px 0; color: var(--controls-text); }
+.reset-records {
+  align-self: flex-start;
+  padding: 5px 10px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #e57373;
+  background: transparent;
+  border: 1px solid #e57373;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.reset-records:hover { background: #e57373; color: #fff; }
 #name-form { margin: 8px 0; }
 #name-form.hidden { display: none; }

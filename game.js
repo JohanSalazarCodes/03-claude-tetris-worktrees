@@ -132,12 +132,15 @@ function saveRecords(rec) { localStorage.setItem(RECORDS_KEY, JSON.stringify(rec
 
 function renderRecords() {
   const rec = loadRecords();
-  const html = rec.top.length
-    ? rec.top.map((e, i) =>
-        `<li${i === highlight ? ' class="me"' : ''}>${esc(e.name)} <b>${e.score.toLocaleString()}</b></li>`).join('')
-    : '<li>Sin récords</li>';
+  const medals = ['🥇', '🥈', '🥉'];
+  const li = (e, i) =>
+    `<li${i === highlight ? ' class="me"' : ''}><span>${medals[i] || i + 1 + '.'} ${esc(e.name)}</span> <b>${e.score.toLocaleString()}</b></li>`;
+  const empty = '<li>Sin récords</li>';
+  const all = rec.top.map(li).join('') || empty;
+  const podium = rec.top.slice(0, 3).map(li).join('') || empty;
+  document.querySelectorAll('.records-list').forEach(el =>
+    el.innerHTML = el.classList.contains('podium') ? podium : all);
   const extra = `Mejor combo: ${rec.bestCombo} · Máx. líneas: ${rec.maxLines}`;
-  document.querySelectorAll('.records-list').forEach(el => el.innerHTML = html);
   document.querySelectorAll('.records-extra').forEach(el => el.textContent = extra);
 }
 

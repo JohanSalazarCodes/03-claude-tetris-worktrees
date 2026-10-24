@@ -14,6 +14,15 @@
     </button>
     <h1 class="game-title">TETRIS</h1>
     <div class="game-container">
+      <aside class="panel records-panel">
+        <div class="panel-section">
+          <span class="label">TOP 3</span>
+          <ol class="records-list podium"></ol>
+          <p class="records-extra"></p>
+          <button class="reset-records">&#8635; Resetear</button>
+        </div>
+      </aside>
+
       <canvas id="board" width="300" height="600"></canvas>
 
       <aside class="panel">
@@ -33,13 +42,6 @@
         <div class="panel-section">
           <span class="label">NEXT</span>
           <canvas id="next-canvas" width="120" height="120"></canvas>
-        </div>
-
-        <div class="panel-section">
-          <span class="label">RECORDS</span>
-          <ol class="records-list"></ol>
-          <p class="records-extra"></p>
-          <button class="reset-records">Resetear</button>
         </div>
 
         <div class="panel-section controls">
