@@ -40,9 +40,11 @@ const levelEl = document.getElementById('level');
 const overlay = document.getElementById('overlay');
 const overlayTitle = document.getElementById('overlay-title');
 const overlayScore = document.getElementById('overlay-score');
+const nameForm = document.getElementById('name-form');
+const nameInput = document.getElementById('name-input');
 const restartBtn = document.getElementById('restart-btn');
 
-let board, current, next, score, lines, level, paused, gameOver, lastTime, dropAccum, dropInterval, animId;
+let board, current, next, score, lines, level, paused, gameOver, lastTime, dropAccum, dropInterval, animId, combo, bestCombo, highlight;
 
 function createBoard() {
   return Array.from({ length: ROWS }, () => new Array(COLS).fill(0));
@@ -112,6 +114,36 @@ function clearLines() {
     dropInterval = Math.max(100, 1000 - (level - 1) * 90);
     updateHUD();
   }
+  return cleared;
+}
+
+// Records: { top: [{name, score}], bestCombo, maxLines } en localStorage
+const RECORDS_KEY = 'tetris-records';
+const TOP_N = 5;
+const esc = s => s.replace(/[&<>"']/g, ch => `&#${ch.charCodeAt(0)};`);
+
+function loadRecords() {
+  try {
+    return { top: [], bestCombo: 0, maxLines: 0, ...JSON.parse(localStorage.getItem(RECORDS_KEY)) };
+  } catch { return { top: [], bestCombo: 0, maxLines: 0 }; }
+}
+
+function saveRecords(rec) { localStorage.setItem(RECORDS_KEY, JSON.stringify(rec)); }
+
+function renderRecords() {
+  const rec = loadRecords();
+  const html = rec.top.length
+    ? rec.top.map((e, i) =>
+        `<li${i === highlight ? ' class="me"' : ''}>${esc(e.name)} <b>${e.score.toLocaleString()}</b></li>`).join('')
+    : '<li>Sin récords</li>';
+  const extra = `Mejor combo: ${rec.bestCombo} · Máx. líneas: ${rec.maxLines}`;
+  document.querySelectorAll('.records-list').forEach(el => el.innerHTML = html);
+  document.querySelectorAll('.records-extra').forEach(el => el.textContent = extra);
+}
+
+function qualifies() {
+  const { top } = loadRecords();
+  return score > 0 && (top.length < TOP_N || score > top[top.length - 1].score);
 }
 
 function ghostY() {
@@ -139,7 +171,8 @@ function softDrop() {
 
 function lockPiece() {
   merge();
-  clearLines();
+  combo = clearLines() ? combo + 1 : 0;
+  bestCombo = Math.max(bestCombo, combo);
   spawn();
 }
 
@@ -225,8 +258,34 @@ function endGame() {
   cancelAnimationFrame(animId);
   overlayTitle.textContent = 'GAME OVER';
   overlayScore.textContent = `Puntuación: ${score.toLocaleString()}`;
+  const rec = loadRecords();
+  rec.bestCombo = Math.max(rec.bestCombo, bestCombo);
+  rec.maxLines = Math.max(rec.maxLines, lines);
+  saveRecords(rec);
+  nameForm.classList.toggle('hidden', !qualifies());
+  if (qualifies()) nameInput.focus();
+  renderRecords();
   overlay.classList.remove('hidden');
 }
+
+nameForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const rec = loadRecords();
+  rec.top.push({ name: nameInput.value.trim().slice(0, 12), score });
+  rec.top.sort((a, b) => b.score - a.score);
+  highlight = rec.top.findIndex(r => r.score === score && r.name === nameInput.value.trim().slice(0, 12));
+  rec.top = rec.top.slice(0, TOP_N);
+  saveRecords(rec);
+  nameForm.classList.add('hidden');
+  renderRecords();
+});
+
+document.querySelector('.reset-records').addEventListener('click', () => {
+  if (!confirm('¿Borrar todos los récords?')) return;
+  localStorage.removeItem(RECORDS_KEY);
+  highlight = -1;
+  renderRecords();
+});
 
 function togglePause() {
   if (gameOver) return;
@@ -238,6 +297,7 @@ function togglePause() {
     cancelAnimationFrame(animId);
     overlayTitle.textContent = 'PAUSA';
     overlayScore.textContent = '';
+    nameForm.classList.add('hidden');
     overlay.classList.remove('hidden');
   }
 }
@@ -264,6 +324,9 @@ function init() {
   score = 0;
   lines = 0;
   level = 1;
+  combo = bestCombo = 0;
+  highlight = -1;
+  nameInput.value = '';
   paused = false;
   gameOver = false;
   dropInterval = 1000;
@@ -272,12 +335,14 @@ function init() {
   next = randomPiece();
   spawn();
   updateHUD();
+  renderRecords();
   overlay.classList.add('hidden');
   cancelAnimationFrame(animId);
   animId = requestAnimationFrame(loop);
 }
 
 document.addEventListener('keydown', e => {
+  if (e.target === nameInput) return;
   if (e.code === 'KeyP') { togglePause(); return; }
   if (paused || gameOver) return;
   switch (e.code) {

@@ -234,3 +234,11 @@ kbd {
 #restart-btn:hover {
   background: #9bbdff;
 }
+
+.records-list { margin: 4px 0; padding-left: 1.4em; font-size: 12px; text-align: left; }
+.records-list b { float: right; margin-left: 12px; }
+.records-list .me { color: #ffd54f; font-weight: bold; }
+.records-extra { font-size: 11px; margin: 4px 0; }
+.reset-records { font-size: 10px; cursor: pointer; }
+#name-form { margin: 8px 0; }
+#name-form.hidden { display: none; }
